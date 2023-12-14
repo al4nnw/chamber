@@ -1,0 +1,24 @@
+name: Flutter Test on Pull Request
+
+on:
+  pull_request:
+    # This workflow is triggered on pull requests
+
+jobs:
+  test:
+    runs-on: ubuntu-latest # Specifies the runner environment
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2 # Checks-out your repository
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "2.2.3" # Specify your Flutter version here
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Run Tests
+        run: flutter test
