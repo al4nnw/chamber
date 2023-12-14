@@ -1,4 +1,4 @@
-import 'package:chamber/chamber.dart';
+import 'package:log_chamber/chamber.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,8 +1,8 @@
-name: chamber
+name: log_chamber
 description: A logging tool for Flutter applications.
 version: 1.0.0
 # repository: https://github.com/my_org/my_repo
-
+repository: https://github.com/al4nnw/chamber
 environment:
   sdk: ^3.2.3
 
