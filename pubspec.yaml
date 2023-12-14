@@ -12,6 +12,15 @@ dependencies:
     sdk: flutter
   # path: ^1.8.0
 
+# This package supports all platforms listed below.
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
