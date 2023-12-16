@@ -4,9 +4,11 @@ import 'package:log_chamber/l10n/app_localizations.dart';
 import '../log_chamber.dart';
 
 class ChamberDialog extends StatefulWidget {
+  final AppLocalizations localizations;
   final String? logKey;
   const ChamberDialog({
     super.key,
+    required this.localizations,
     this.logKey,
   });
 
@@ -29,7 +31,6 @@ class _ChamberDialogState extends State<ChamberDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var localizations = AppLocalizations.of(context);
     return AlertDialog(
         insetPadding: EdgeInsets.all(isFullscreen ? 0 : 16),
         contentPadding: EdgeInsets.all(isFullscreen ? 0 : 16),
@@ -38,7 +39,7 @@ class _ChamberDialogState extends State<ChamberDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(localizations.translate('logs')),
+                Text(widget.localizations.translate('logs')),
                 IconButton(
                     onPressed: () {
                       setState(() {
@@ -59,7 +60,7 @@ class _ChamberDialogState extends State<ChamberDialog> {
                           });
                         },
                         decoration: InputDecoration(
-                          hintText: localizations.translate('search'),
+                          hintText: widget.localizations.translate('search'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -71,36 +72,42 @@ class _ChamberDialogState extends State<ChamberDialog> {
                 : SizedBox.shrink(),
           ],
         ),
-        content: Container(
-          decoration: BoxDecoration(
-              color: Color.fromRGBO(250, 250, 250, 1),
-              borderRadius: BorderRadius.all(Radius.circular(isFullscreen ? 0 : 16))),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(16),
-            physics: BouncingScrollPhysics(),
-            child: AnimatedCrossFade(
-              sizeCurve: Curves.easeIn,
-              duration: const Duration(milliseconds: 300),
-              crossFadeState: logs.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-              firstChild: Text(localizations.translate('noRegisterFound')),
-              secondChild: ListBody(
-                children: logs.expand((entry) {
-                  if (searchValue.isNotEmpty && !entry.toLowerCase().contains(searchValue)) {
-                    return [SizedBox.shrink()];
-                  }
+        content: Column(
+          mainAxisSize: isFullscreen ? MainAxisSize.max : MainAxisSize.min,
+          crossAxisAlignment: isFullscreen ? CrossAxisAlignment.stretch : CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  color: Color.fromRGBO(250, 250, 250, 1),
+                  borderRadius: BorderRadius.all(Radius.circular(isFullscreen ? 0 : 16))),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(16),
+                physics: BouncingScrollPhysics(),
+                child: AnimatedCrossFade(
+                  sizeCurve: Curves.easeIn,
+                  duration: const Duration(milliseconds: 300),
+                  crossFadeState: logs.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                  firstChild: Text(widget.localizations.translate('noRegisterFound')),
+                  secondChild: ListBody(
+                    children: logs.expand((entry) {
+                      if (searchValue.isNotEmpty && !entry.toLowerCase().contains(searchValue)) {
+                        return [SizedBox.shrink()];
+                      }
 
-                  return [
-                    Text(entry),
-                    Divider(),
-                  ];
-                }).toList(),
+                      return [
+                        Text(entry),
+                        Divider(),
+                      ];
+                    }).toList(),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
         actions: <Widget>[
           TextButton(
-            child: Text(localizations.translate('clean')),
+            child: Text(widget.localizations.translate('clean')),
             onPressed: () {
               Chamber.clear();
               setState(() {
@@ -109,7 +116,7 @@ class _ChamberDialogState extends State<ChamberDialog> {
             },
           ),
           TextButton(
-            child: Text(localizations.translate('close')),
+            child: Text(widget.localizations.translate('close')),
             onPressed: () {
               Navigator.of(context).pop();
             },

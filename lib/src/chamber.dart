@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:log_chamber/l10n/app_localizations.dart';
 import 'package:log_chamber/src/chamber_config.dart';
 
 import 'chamber_dialog.dart';
 
 class Chamber {
-  static final ChamberConfig config = ChamberConfig();
+  static ChamberConfig config = ChamberConfig();
 
   static final Map<String, List<String>> _logs = {};
 
@@ -54,11 +55,15 @@ class Chamber {
 
   static Future<void> display(BuildContext context, [String? key]) async {
     if (!isAuthorized()) return;
+    AppLocalizations localizations = AppLocalizations.of(context);
+
+    await localizations.load();
 
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return ChamberDialog(
+          localizations: localizations,
           logKey: key,
         );
       },

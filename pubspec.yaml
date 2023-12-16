@@ -1,6 +1,6 @@
 name: log_chamber
-description: A logging tool for Flutter applications.
-version: 1.1.0
+description: A logging tool for Flutter applications that acts like a console window that can be seen inside the app.
+version: 1.1.1
 # repository: https://github.com/my_org/my_repo
 repository: https://github.com/al4nnw/chamber
 environment:
