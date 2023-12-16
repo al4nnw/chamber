@@ -15,3 +15,7 @@
 - Fixes to localization and added full app example.
 - Enabling android to test example.
 - Few changes to dialog widget.
+
+## 1.1.2
+
+- Adding dartdoc's to files.
