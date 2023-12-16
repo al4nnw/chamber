@@ -1,15 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:log_chamber/src/chamber_config.dart';
+
+import 'chamber_dialog.dart';
 
 class Chamber {
+  static final ChamberConfig config = ChamberConfig();
+
   static final Map<String, List<String>> _logs = {};
 
-  static void log(String message, [String key = 'general']) {
+  static log(String message, [String key = 'general']) {
+    if (!isAuthorized()) return;
+
     final timestamp = DateTime.now();
-    final entry = "${timestamp.toIso8601String()} [$key] - $message";
+    final entry = "${_formatTime(timestamp)} [$key] - $message";
+
+    if ((_logs[key]?.length ?? 0) >= config.maxLogSize) {
+      _logs[key]?.removeAt(0);
+    }
+
     _logs.putIfAbsent(key, () => []).add(entry);
   }
 
+  static String _formatTime(DateTime time) {
+    if (config.formatTime != null) {
+      return config.formatTime!(time);
+    }
+
+    final hours = "${time.hour}:${time.minute}:${time.second}.${time.millisecond}";
+    final date = "${time.day}/${time.month}/${time.year}";
+
+    return "$date $hours";
+  }
+
   static void clear([String? key]) {
+    if (!isAuthorized()) return;
+
     if (key != null) {
       _logs[key]?.clear();
     } else {
@@ -17,7 +42,9 @@ class Chamber {
     }
   }
 
-  static List<String> get(String? key) {
+  static List<String> get([String? key]) {
+    if (!isAuthorized()) return [];
+
     if (key == null) {
       return _logs.entries.expand((entry) => entry.value).toList();
     }
@@ -25,33 +52,20 @@ class Chamber {
     return _logs[key] ?? [];
   }
 
-  static void display(BuildContext context, [String? key]) {
-    final entries = get(key);
+  static Future<void> display(BuildContext context, [String? key]) async {
+    if (!isAuthorized()) return;
 
-    showDialog(
+    return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Logs'),
-          content: SingleChildScrollView(
-              child: ListBody(
-            children: entries
-                .expand((entry) => [
-                      Text(entry),
-                      Divider(),
-                    ])
-                .toList(),
-          )),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+        return ChamberDialog(
+          logKey: key,
         );
       },
     );
+  }
+
+  static bool isAuthorized() {
+    return config.isUserAuthorized;
   }
 }
