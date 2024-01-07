@@ -19,3 +19,10 @@
 ## 1.1.2
 
 - Adding dartdoc's to files.
+
+## 1.2.0
+
+- Removed localizations.
+- Started flutter project inside the example folder.
+- Small changes to the UI.
+- Changed some docs.

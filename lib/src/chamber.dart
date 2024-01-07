@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:log_chamber/l10n/app_localizations.dart';
 import 'package:log_chamber/src/chamber_config.dart';
 
 import 'chamber_dialog.dart';
@@ -87,15 +86,10 @@ class Chamber {
   /// [context] is the BuildContext where the dialog will be shown.
   static Future<void> display(BuildContext context, [String? key]) async {
     if (!isAuthorized()) return;
-    AppLocalizations localizations = AppLocalizations.of(context);
-
-    await localizations.load();
-
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return ChamberDialog(
-          localizations: localizations,
           logKey: key,
         );
       },

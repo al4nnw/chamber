@@ -1,4 +1,4 @@
-# Chamber - Flutter Logging Made Easy
+# Chamber - A easy log viewing tool
 
 ## Introduction
 

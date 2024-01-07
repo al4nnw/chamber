@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:log_chamber/l10n/app_localizations.dart';
 import '../log_chamber.dart';
 
 /// `ChamberDialog` is a widget that displays logs in a dialog.
@@ -7,21 +6,15 @@ import '../log_chamber.dart';
 ///
 /// This dialog is designed to work with the `Chamber` class for log management.
 class ChamberDialog extends StatefulWidget {
-  /// Localizations for the application.
-  /// Used to translate strings within the dialog.
-  final AppLocalizations localizations;
-
   /// Optional key to filter logs.
   /// If provided, only logs associated with this key are displayed.
   final String? logKey;
 
   /// Constructs a `ChamberDialog`.
   ///
-  /// [localizations] must be provided to ensure proper string translations.
   /// [logKey] is optional and used to filter logs.
   const ChamberDialog({
     super.key,
-    required this.localizations,
     this.logKey,
   });
 
@@ -51,16 +44,20 @@ class _ChamberDialogState extends State<ChamberDialog> {
   Widget build(BuildContext context) {
     // Building the UI for the dialog.
     return AlertDialog(
+      scrollable: true,
       // Adjusts padding based on whether the dialog is in full-screen mode.
       insetPadding: EdgeInsets.all(isFullscreen ? 0 : 16),
       contentPadding: EdgeInsets.all(isFullscreen ? 0 : 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(isFullscreen ? 0 : 16)),
+      ),
       title: Column(
         children: [
           // Top bar with title and fullscreen toggle.
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.localizations.translate('logs')),
+              Text("Logs", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
               IconButton(
                 onPressed: () {
                   setState(() {
@@ -75,15 +72,18 @@ class _ChamberDialogState extends State<ChamberDialog> {
           isFullscreen
               ? Column(
                   children: [
-                    Divider(),
+                    const SizedBox(height: 16),
                     TextField(
                       onChanged: (value) {
                         setState(() {
                           searchValue = value.toLowerCase();
                         });
                       },
+                      onTapOutside: (event) {
+                        FocusScope.of(context).unfocus();
+                      },
                       decoration: InputDecoration(
-                        hintText: widget.localizations.translate('search'),
+                        hintText: "Search",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -102,7 +102,6 @@ class _ChamberDialogState extends State<ChamberDialog> {
           Container(
             decoration: BoxDecoration(
               color: Color.fromRGBO(250, 250, 250, 1),
-              borderRadius: BorderRadius.all(Radius.circular(isFullscreen ? 0 : 16)),
             ),
             child: SingleChildScrollView(
               padding: EdgeInsets.all(16),
@@ -111,7 +110,7 @@ class _ChamberDialogState extends State<ChamberDialog> {
                 sizeCurve: Curves.easeIn,
                 duration: const Duration(milliseconds: 300),
                 crossFadeState: logs.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                firstChild: Text(widget.localizations.translate('noRegisterFound')),
+                firstChild: Text("No register found."),
                 secondChild: ListBody(
                   children: logs.expand((entry) {
                     if (searchValue.isNotEmpty && !entry.toLowerCase().contains(searchValue)) {
@@ -132,7 +131,7 @@ class _ChamberDialogState extends State<ChamberDialog> {
       actions: <Widget>[
         // Button to clear logs.
         TextButton(
-          child: Text(widget.localizations.translate('clean')),
+          child: Text("Clean"),
           onPressed: () {
             Chamber.clear();
             setState(() {
@@ -142,7 +141,7 @@ class _ChamberDialogState extends State<ChamberDialog> {
         ),
         // Button to close the dialog.
         TextButton(
-          child: Text(widget.localizations.translate('close')),
+          child: Text("Close"),
           onPressed: () {
             Navigator.of(context).pop();
           },
