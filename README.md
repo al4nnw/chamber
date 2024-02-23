@@ -21,7 +21,7 @@ Add Chamber to your Flutter project by including it in your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  chamber: ^1.0.0
+  chamber: ^1.2.0
 ```
 
 ### Usage
