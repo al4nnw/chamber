@@ -3,7 +3,7 @@ description: A logging tool for Flutter applications that acts like a console wi
 version: 1.2.0
 repository: https://github.com/al4nnw/chamber
 environment:
-  sdk: ^3.2.3
+  sdk: ^3.0.3
 
 # Add regular dependencies here.
 dependencies:
